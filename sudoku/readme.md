@@ -1,9 +1,12 @@
+Sudoku solver
+=============
+
 Write a function that will solve a 9x9 Sudoku puzzle. The function will take one argument consisting of the 2D puzzle array, with the value 0 representing an unknown square.
 
 The Sudokus tested against your function will be "easy" (i.e. determinable; there will be no need to assume and test possibilities on unknowns) and can be solved with a brute-force approach.
 
 For Sudoku rules, see the Wikipedia article.
-
+```javascript
 var puzzle = [
             [5,3,0,0,7,0,0,0,0],
             [6,0,0,1,9,5,0,0,0],
@@ -26,3 +29,4 @@ sudoku(puzzle);
 [9,6,1,5,3,7,2,8,4],
 [2,8,7,4,1,9,6,3,5],
 [3,4,5,2,8,6,1,7,9]]
+```
