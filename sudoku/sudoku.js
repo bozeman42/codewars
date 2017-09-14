@@ -20,7 +20,8 @@ var puzzle = [
     objPuzzle.forEach(function(row){
       row.forEach(function(number){
         if (number.number === 0)
-        testRow(number,objPuzzle);
+        number.testRow(objPuzzle);
+        number.testColumn(objPuzzle);
       });
     });
     console.log(objPuzzle);
@@ -31,25 +32,46 @@ var puzzle = [
     this.options = [1,2,3,4,5,6,7,8,9];
     this.row = row;
     this.column = column;
-  }
-
-  function testRow(number,puzzle){
-    puzzle[number.row].forEach(function(otherNumber){
-      if(otherNumber.column != number.column){
-        number.options = number.options.filter(function(option){
-          return (option != otherNumber.number);
-        });
+    this.testRow = function(puzzle){
+      var changeMade = false;
+      var col = this.column;
+      puzzle[this.row].forEach(function(otherNumber){
+        if(otherNumber.column != col){
+          row[col].options = row[col].options.filter(function(option){
+            return (option != otherNumber.number);
+          });
+        }
+      });
+      if (this.options.length === 1) {
+        this.number = this.options[0];
+        changeMade = true;
       }
-    });
-    if (number.options.length === 1) {
-      number.number = number.options[0];
-    }
+      return changeMade;
+    };
+    this.testColumn = function(puzzle){
+      var changeMade = false;
+      var col = this.column;
+      puzzle.forEach(function(row){
+        if(row[col].number !== 0 && row[col].row != this.row){
+          row[col].options = row[col].options.filter(function(option){
+            return (option != row[col].number);
+          });
+        }
+      });
+      if (this.options.length === 1) {
+        this.number = this.options[0];
+        changeMade = true;
+      }
+      return changeMade;
+    };
   }
 
 
- // use column number to iterate over the numbers in each column
+  // use column number to iterate over the numbers in each column
   function testColumn(number,puzzle){
+    var used = [];
+
     for (var i = 0; i < puzzle.length; i++) {
-      puzzle[i]
+
     }
   }
