@@ -17,13 +17,19 @@ var puzzle = [
         return new SudokuNumber(element,rowIndex,columnIndex);
       });
     });
-    objPuzzle.forEach(function(row){
-      row.forEach(function(number){
-        if (number.number === 0)
-        number.testRow(objPuzzle);
-        number.testColumn(objPuzzle);
+    var progress = false;
+    do {
+      progress = false;
+      objPuzzle.forEach(function(row){
+        row.forEach(function(number){
+          if (number.number === 0) {
+            if (number.testRow(objPuzzle) || number.testColumn(objPuzzle)) {
+              progress = true;
+            }
+          }
+        });
       });
-    });
+    } while (progress === true);
     console.log(objPuzzle);
   }
 
@@ -32,37 +38,50 @@ var puzzle = [
     this.options = [1,2,3,4,5,6,7,8,9];
     this.row = row;
     this.column = column;
+    this.square = (Math.floor(this.column / 3) + (3 * Math.floor(this.row / 3)));
+
     this.testRow = function(puzzle){
       var changeMade = false;
       var col = this.column;
-      puzzle[this.row].forEach(function(otherNumber){
-        if(otherNumber.column != col){
-          row[col].options = row[col].options.filter(function(option){
+      var row = this.row;
+      puzzle[row].forEach(function(otherNumber){
+        if(otherNumber.column != col && otherNumber.number !== 0){
+          puzzle[row][col].options = puzzle[row][col].options.filter(function(option){
             return (option != otherNumber.number);
           });
         }
       });
       if (this.options.length === 1) {
+        console.log("Found a number in row check! Row",this.row,"col",this.col,"is",this.options[0]);
         this.number = this.options[0];
         changeMade = true;
       }
       return changeMade;
     };
+
     this.testColumn = function(puzzle){
       var changeMade = false;
-      var col = this.column;
-      puzzle.forEach(function(row){
-        if(row[col].number !== 0 && row[col].row != this.row){
-          row[col].options = row[col].options.filter(function(option){
-            return (option != row[col].number);
+      var numCol = this.column;
+      var numRow = this.row;
+      puzzle.forEach(function(row,rowNumber){
+        var comparedNumber = row[numCol];
+        if(comparedNumber.number !== 0 && rowNumber != numRow){
+          puzzle[numRow][numCol].options = puzzle[numRow][numCol].options.filter(function(option){
+            return (option != comparedNumber.number);
           });
         }
       });
       if (this.options.length === 1) {
+        console.log("This context",this);
+        console.log("Found a number in column check! Row",this.row,"col",this.column,"is",this.options[0]);
         this.number = this.options[0];
         changeMade = true;
       }
       return changeMade;
+    };
+
+    this.testSquare = function(puzzle){
+
     };
   }
 
