@@ -17,20 +17,26 @@ var puzzle = [
         return new SudokuNumber(element,rowIndex,columnIndex);
       });
     });
-    var progress = false;
     do {
-      progress = false;
-      objPuzzle.forEach(function(row){
-        row.forEach(function(number){
+      var progress = false;
+      objPuzzle.forEach(function(rowToTest){
+        rowToTest.forEach(function(number){
           if (number.number === 0) {
-            if (number.testRow(objPuzzle) || number.testColumn(objPuzzle)) {
+            var rowChange = number.testRow(objPuzzle);
+            var colChange = number.testColumn(objPuzzle);
+            var squareChange = number.testSquare(objPuzzle);
+            if (rowChange || colChange || squareChange) {
               progress = true;
             }
           }
         });
       });
     } while (progress === true);
-    console.log(objPuzzle);
+    return objPuzzle.map(function(row){
+      return row.map(function(sudokuNumber){
+        return sudokuNumber.number;
+      });
+    });
   }
 
   function SudokuNumber(number,row,column){
@@ -52,7 +58,6 @@ var puzzle = [
         }
       });
       if (this.options.length === 1) {
-        console.log("Found a number in row check! Row",this.row,"col",this.col,"is",this.options[0]);
         this.number = this.options[0];
         changeMade = true;
       }
@@ -72,8 +77,6 @@ var puzzle = [
         }
       });
       if (this.options.length === 1) {
-        console.log("This context",this);
-        console.log("Found a number in column check! Row",this.row,"col",this.column,"is",this.options[0]);
         this.number = this.options[0];
         changeMade = true;
       }
@@ -81,16 +84,21 @@ var puzzle = [
     };
 
     this.testSquare = function(puzzle){
-
+      var changeMade = false;
+      var startRow = 3*(Math.floor(this.square / 3));
+      var startColumn = 3*(this.square % 3);
+      var numCol = this.column;
+      var numRow = this.row;
+      for (var i = startRow; i < startRow + 3; i++) {
+        for (var j = startColumn; j < startColumn+ 3; j++){
+          puzzle[numRow][numCol].options = puzzle[numRow][numCol].options.filter(function(option){
+            return (option != puzzle[i][j].number);
+          });
+        }
+      }
+      if (this.options.length === 1) {
+        this.number = this.options[0];
+        changeMade = true;
+      }
     };
-  }
-
-
-  // use column number to iterate over the numbers in each column
-  function testColumn(number,puzzle){
-    var used = [];
-
-    for (var i = 0; i < puzzle.length; i++) {
-
-    }
   }
