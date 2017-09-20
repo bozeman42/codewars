@@ -102,3 +102,5 @@ var puzzle = [
       }
     };
   }
+
+console.log(sudoku(puzzle));
